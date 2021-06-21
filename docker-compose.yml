@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+    db:
+        image: mysql:latest
+        command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=graphql
+            - MYSQL_USER=graphql
+            - MYSQL_PASSWORD=graphql
+            - "TZ=Asia/Tokyo"
+    web:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        volumes:
+            - ./server:/server
+        working_dir: /server
+        command:  bash -c "go mod download && go run server.go"
+        environment:
+            - GRAPHQL_LOGFILEPATH=./log/app.log
+            - GRAPHQL_SQLLOGLEVEL=Info
+            - GRAPHQL_PORT=8085
+            - GRAPHQL_BASEURL=http://localhost:8085
+            - GRAPHQL_DSN=graphql:graphql@tcp(db:3306)/graphql?parseTime=True
+        ports:
+            - 8085:8085
+        depends_on: 
+            - db

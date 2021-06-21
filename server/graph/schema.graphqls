@@ -1,0 +1,58 @@
+
+type Product {
+  id: ID!
+  name: String!
+  price: Int!
+  code: String 
+  detail: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+  skus: [Sku!]!
+}
+
+type Sku {
+  id: ID!
+  name: String!
+  stock: Int!
+  code: String
+  createdAt: String
+  updatedAt: String
+  deletedAt: String
+  product: Product!
+}
+
+type Query {
+  products: [Product!]!
+  product(id: ID!): Product!
+  skus: [Sku!]!
+}
+
+input NewProduct {
+  name: String!
+  price: Int!
+  code: String
+  detail: String
+}
+
+input EditProduct {
+  id: Int!
+  name: String
+  price: Int
+  code: String
+  detail: String
+}
+
+input NewSku {
+  productId: Int!
+  name: String!
+  stock: Int!
+  code: String
+}
+
+type Mutation {
+  createProduct(input: NewProduct!): Product!
+  updateProduct(input: EditProduct!): Product!
+  deleteProduct(productId: Int!): Int!
+  createSku(input: NewSku!): Sku!
+}
