@@ -4,17 +4,20 @@ GraphQL Server のサンプル実装
 
 ## 必要なソフトウェア
 
+- Docker
+  - Docker version 20.10.6で検証
 - docker-compose
+  - docker-compose version 1.29.1で検証
 
 ## 実行方法
 
-プロジェクトのルートディレクトリーでDocker composeを実行する
+プロジェクトのルートディレクトリーでDocker composeを実行することで立ち上がります。
 
 ``` shell
 docker-compose up -d
 ```
 
-http://localhost:8085 にアクセスするとGraphQL Play groundが立ち上がる。
+http://localhost:8085 にアクセスするとGraphQL Play groundが立ち上ります。
 
 ![GraphQL Play ground](playground.png)
 
@@ -31,7 +34,7 @@ Dockerを使用せずに立ち上げる場合、環境変数に以下の値を�
 値自体はDockerで設定している値をそのまま記載しているだけですので、環境に応じて変更していただいて問題ありません。
 
 | 変数名 | 変数の値(Dockerで指定している値) |
-|:------|:--------|:----|
+|:------|:--------|
 | GRAPHQL_BASEURL | http://localhost:8085 |
 | GRAPHQL_DSN | graphql:graphql@tcp(db:3306)/graphql?parseTime=True |
 | GRAPHQL_LOGFILE | ./log/app.log |
@@ -76,7 +79,7 @@ _schema.resolvers.go_ が作成、または変更されますので、未実装�
 
 `[]*github.com/tochukaso/graphql-server/graph/Model.Sku` の部分は戻り値の部分になります。
 
-- ※Zシェルを使用している場合、`noglob`をコマンドの先頭につけてください。 _*_ が設定されていることでコマンドが正常に実行されません。
+- Zシェルを使用している場合、`noglob`をコマンドの先頭につけてください。 _*_ が設定されていることでコマンドが正常に実行されません。
 - 1対1の関係の場合、戻り値の型(上記の[]*github...の箇所)は配列にしないでください。
 - dataloaders.goに新しく追加されたLoaderの実装を記載して、schema.resolvers.goで呼び出し箇所を実装します。
 
