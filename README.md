@@ -2,6 +2,12 @@
 
 GraphQL Server のサンプル実装
 
+[gqlgen] を使用して、GraphQL Serverを実装しています。
+
+商品(Product), バリエーション(SKU)をGraphQL APIで登録、更新、削除、検索するサンプルです。
+
+商品情報更新についてはSubscriptionも実装しています。
+
 ## 必要なソフトウェア
 
 - Docker
