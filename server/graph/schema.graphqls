@@ -28,6 +28,17 @@ type Query {
   skus: [Sku!]!
 }
 
+type Mutation {
+  createProduct(input: NewProduct!): Product!
+  updateProduct(input: EditProduct!): Product!
+  deleteProduct(productId: Int!): Int!
+  createSku(input: NewSku!): Sku!
+}
+
+type Subscription {
+  updateProduct(id: ID!): Product
+}
+
 input NewProduct {
   name: String!
   price: Int!
@@ -48,11 +59,4 @@ input NewSku {
   name: String!
   stock: Int!
   code: String
-}
-
-type Mutation {
-  createProduct(input: NewProduct!): Product!
-  updateProduct(input: EditProduct!): Product!
-  deleteProduct(productId: Int!): Int!
-  createSku(input: NewSku!): Sku!
 }
