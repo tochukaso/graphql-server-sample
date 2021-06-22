@@ -47,6 +47,11 @@ func (r *mutationResolver) UpdateProduct(ctx context.Context, input model.EditPr
 		log.Print("プロダクトの更新に失敗しました")
 	} else {
 		log.Print("プロダクトを更新しました")
+		r.mu.Lock()
+		for _, observer := range r.ProductObservers {
+			observer <- dbProduct
+		}
+		r.mu.Unlock()
 	}
 
 	return dbProduct, result.Error
@@ -136,6 +141,20 @@ func (r *skuResolver) Product(ctx context.Context, obj *model.Sku) (*model.Produ
 	return ctxLoaders(ctx).productByID.Load(obj.ProductId)
 }
 
+func (r *subscriptionResolver) UpdateProduct(ctx context.Context, id string) (<-chan *model.Product, error) {
+
+	var product *model.Product
+	db.GetDB().First(&product, id)
+	productChannel := make(chan *model.Product, 1)
+
+	r.mu.Lock()
+	r.ProductObservers[id] = productChannel
+	r.mu.Unlock()
+
+	r.ProductObservers[id] <- product
+	return productChannel, nil
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -148,7 +167,11 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 // Sku returns generated.SkuResolver implementation.
 func (r *Resolver) Sku() generated.SkuResolver { return &skuResolver{r} }
 
+// Subscription returns generated.SubscriptionResolver implementation.
+func (r *Resolver) Subscription() generated.SubscriptionResolver { return &subscriptionResolver{r} }
+
 type mutationResolver struct{ *Resolver }
 type productResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type skuResolver struct{ *Resolver }
+type subscriptionResolver struct{ *Resolver }

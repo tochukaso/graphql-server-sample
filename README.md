@@ -24,11 +24,55 @@ http://localhost:8085 にアクセスするとGraphQL Play groundが立ち上り
 画像の様にPlay groundに _mutation_ や _query_ を記載することが出来ます。
 引数を指定したい場合、画面左下の _QUERY VARIABLES_ から引数を設定できます。
 
+商品登録用の _mutation_ のサンプル
+
+``` text
+mutation CreateProduct($input: NewProduct!) {
+  createProduct(input: $input) {
+    id
+    name
+    price
+    code
+    detail
+    createdAt
+    updatedAt
+    deletedAt
+  }
+}
+```
+
+引数( _QUERY VARIABLES_ )のサンプル
+
+``` text
+{
+  "input": {
+    "name": "初めての商品",
+    "price": 10000,
+    "code": "first_product",
+    "detail": "初めて販売する商品です" 
+  }
+}
+```
+
 ![GraphQL Query](query.png)
+
+商品情報取得用の _query_ のサンプル
+
+``` text
+query products {
+  products {
+    id
+    name
+    price
+  }
+}
+```
 
 Play groundに複数の _mutation_ や _query_ を記載した場合、 実行ボタンをクリックすると、どのクエリーを実行するかを選択することが出来ます。
 引数は複数保存することが出来ないので、都度変更する必要があります。
 
+
+### Dockerを使用せずに動かしたい場合
 
 Dockerを使用せずに立ち上げる場合、環境変数に以下の値を設定してください。
 値自体はDockerで設定している値をそのまま記載しているだけですので、環境に応じて変更していただいて問題ありません。

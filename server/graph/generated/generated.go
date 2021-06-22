@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"io"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -39,6 +40,7 @@ type ResolverRoot interface {
 	Product() ProductResolver
 	Query() QueryResolver
 	Sku() SkuResolver
+	Subscription() SubscriptionResolver
 }
 
 type DirectiveRoot struct {
@@ -80,6 +82,10 @@ type ComplexityRoot struct {
 		Stock     func(childComplexity int) int
 		UpdatedAt func(childComplexity int) int
 	}
+
+	Subscription struct {
+		UpdateProduct func(childComplexity int, id string) int
+	}
 }
 
 type MutationResolver interface {
@@ -104,6 +110,9 @@ type SkuResolver interface {
 	UpdatedAt(ctx context.Context, obj *model.Sku) (*string, error)
 	DeletedAt(ctx context.Context, obj *model.Sku) (*string, error)
 	Product(ctx context.Context, obj *model.Sku) (*model.Product, error)
+}
+type SubscriptionResolver interface {
+	UpdateProduct(ctx context.Context, id string) (<-chan *model.Product, error)
 }
 
 type executableSchema struct {
@@ -314,6 +323,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Sku.UpdatedAt(childComplexity), true
 
+	case "Subscription.updateProduct":
+		if e.complexity.Subscription.UpdateProduct == nil {
+			break
+		}
+
+		args, err := ec.field_Subscription_updateProduct_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Subscription.UpdateProduct(childComplexity, args["id"].(string)), true
+
 	}
 	return 0, false
 }
@@ -346,6 +367,23 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 			first = false
 			data := ec._Mutation(ctx, rc.Operation.SelectionSet)
 			var buf bytes.Buffer
+			data.MarshalGQL(&buf)
+
+			return &graphql.Response{
+				Data: buf.Bytes(),
+			}
+		}
+	case ast.Subscription:
+		next := ec._Subscription(ctx, rc.Operation.SelectionSet)
+
+		var buf bytes.Buffer
+		return func(ctx context.Context) *graphql.Response {
+			buf.Reset()
+			data := next()
+
+			if data == nil {
+				return nil
+			}
 			data.MarshalGQL(&buf)
 
 			return &graphql.Response{
@@ -408,6 +446,17 @@ type Query {
   skus: [Sku!]!
 }
 
+type Mutation {
+  createProduct(input: NewProduct!): Product!
+  updateProduct(input: EditProduct!): Product!
+  deleteProduct(productId: Int!): Int!
+  createSku(input: NewSku!): Sku!
+}
+
+type Subscription {
+  updateProduct(id: ID!): Product
+}
+
 input NewProduct {
   name: String!
   price: Int!
@@ -428,13 +477,6 @@ input NewSku {
   name: String!
   stock: Int!
   code: String
-}
-
-type Mutation {
-  createProduct(input: NewProduct!): Product!
-  updateProduct(input: EditProduct!): Product!
-  deleteProduct(productId: Int!): Int!
-  createSku(input: NewSku!): Sku!
 }
 `, BuiltIn: false},
 }
@@ -520,6 +562,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 }
 
 func (ec *executionContext) field_Query_product_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Subscription_updateProduct_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -1489,6 +1546,55 @@ func (ec *executionContext) _Sku_product(ctx context.Context, field graphql.Coll
 	res := resTmp.(*model.Product)
 	fc.Result = res
 	return ec.marshalNProduct2ᚖgithubᚗcomᚋtochukasoᚋgraphqlᚑserverᚋgraphᚋmodelᚐProduct(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Subscription_updateProduct(ctx context.Context, field graphql.CollectedField) (ret func() graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = nil
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Subscription",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Subscription_updateProduct_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return nil
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Subscription().UpdateProduct(rctx, args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return nil
+	}
+	if resTmp == nil {
+		return nil
+	}
+	return func() graphql.Marshaler {
+		res, ok := <-resTmp.(<-chan *model.Product)
+		if !ok {
+			return nil
+		}
+		return graphql.WriterFunc(func(w io.Writer) {
+			w.Write([]byte{'{'})
+			graphql.MarshalString(field.Alias).MarshalGQL(w)
+			w.Write([]byte{':'})
+			ec.marshalOProduct2ᚖgithubᚗcomᚋtochukasoᚋgraphqlᚑserverᚋgraphᚋmodelᚐProduct(ctx, field.Selections, res).MarshalGQL(w)
+			w.Write([]byte{'}'})
+		})
+	}
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -3018,6 +3124,26 @@ func (ec *executionContext) _Sku(ctx context.Context, sel ast.SelectionSet, obj 
 	return out
 }
 
+var subscriptionImplementors = []string{"Subscription"}
+
+func (ec *executionContext) _Subscription(ctx context.Context, sel ast.SelectionSet) func() graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, subscriptionImplementors)
+	ctx = graphql.WithFieldContext(ctx, &graphql.FieldContext{
+		Object: "Subscription",
+	})
+	if len(fields) != 1 {
+		ec.Errorf(ctx, "must subscribe to exactly one stream")
+		return nil
+	}
+
+	switch fields[0].Name {
+	case "updateProduct":
+		return ec._Subscription_updateProduct(ctx, fields[0])
+	default:
+		panic("unknown field " + strconv.Quote(fields[0].Name))
+	}
+}
+
 var __DirectiveImplementors = []string{"__Directive"}
 
 func (ec *executionContext) ___Directive(ctx context.Context, sel ast.SelectionSet, obj *introspection.Directive) graphql.Marshaler {
@@ -3721,6 +3847,13 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 		return graphql.Null
 	}
 	return graphql.MarshalInt(*v)
+}
+
+func (ec *executionContext) marshalOProduct2ᚖgithubᚗcomᚋtochukasoᚋgraphqlᚑserverᚋgraphᚋmodelᚐProduct(ctx context.Context, sel ast.SelectionSet, v *model.Product) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Product(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
