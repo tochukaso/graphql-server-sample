@@ -7,9 +7,9 @@ import (
 	"context"
 	"log"
 
-	"github.com/tochukaso/graphql-server/db"
-	"github.com/tochukaso/graphql-server/graph/generated"
-	"github.com/tochukaso/graphql-server/graph/model"
+	"github.com/tochukaso/graphql-server-sample/db"
+	"github.com/tochukaso/graphql-server-sample/graph/generated"
+	"github.com/tochukaso/graphql-server-sample/graph/model"
 )
 
 func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewProduct) (*model.Product, error) {

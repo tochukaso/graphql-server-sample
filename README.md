@@ -1,4 +1,4 @@
-# graphql-server
+# graphql-server-sample
 
 GraphQL Server のサンプル実装
 
@@ -119,7 +119,7 @@ _schema.resolvers.go_ が作成、または変更されますので、未実装�
 
 以下の様なコマンドをserverディレクトリー直下で実行します。
 
-`go run github.com/vektah/dataloaden SkuSliceLoader int []*github.com/tochukaso/graphql-server/graph/Model.Sku`
+`go run github.com/vektah/dataloaden SkuSliceLoader int []*github.com/tochukaso/graphql-server-sample/graph/Model.Sku`
 
 `SkuSliceLoader`の部分は、dataloadenでジェネレートするクラス名になります。
 
@@ -127,7 +127,7 @@ _schema.resolvers.go_ が作成、または変更されますので、未実装�
 
 この場合、productId(int)をキーにskuを取得するので、`int`を指定しています。
 
-`[]*github.com/tochukaso/graphql-server/graph/Model.Sku` の部分は戻り値の部分になります。
+`[]*github.com/tochukaso/graphql-server-sample/graph/Model.Sku` の部分は戻り値の部分になります。
 
 - Zシェルを使用している場合、`noglob`をコマンドの先頭につけてください。 _*_ が設定されていることでコマンドが正常に実行されません。
 - 1対1の関係の場合、戻り値の型(上記の[]*github...の箇所)は配列にしないでください。

@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/tochukaso/graphql-server/db"
-	"github.com/tochukaso/graphql-server/graph/generated"
-	"github.com/tochukaso/graphql-server/graph/model"
+	"github.com/tochukaso/graphql-server-sample/db"
+	"github.com/tochukaso/graphql-server-sample/graph/generated"
+	"github.com/tochukaso/graphql-server-sample/graph/model"
 )
 
 type ctxKeyType struct{ name string }
