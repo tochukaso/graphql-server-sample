@@ -107,7 +107,7 @@ _gqlgen_ を使用することで、GraphQL用のコードを自動生成する�
 
 まず、スキーマ(schema.graphqls)を作成します。
 
-次に、`gqlgen-generate ./...`をserverディレクトリー直下(gqlgen.ymlが置いてあるディレクトリー)で実行します。
+次に、`gqlgen-generate ./...`をルートディレクトリー直下(gqlgen.ymlが置いてあるディレクトリー)で実行します。
 
 スキーマを変更したい場合も同様に、schema.graphqlsを変更後に、`gqlgen-generate ./...`を実行します。
 
@@ -117,7 +117,7 @@ _schema.resolvers.go_ が作成、または変更されますので、未実装�
 
 遅延フェッチ対象を使用したい場合、 _dataloaden_ を使用します。
 
-以下の様なコマンドをserverディレクトリー直下で実行します。
+以下の様なコマンドをルートディレクトリー直下で実行します。
 
 `go run github.com/vektah/dataloaden SkuSliceLoader int []*github.com/tochukaso/graphql-server-sample/graph/Model.Sku`
 

@@ -14,8 +14,8 @@ services:
             context: ./
             dockerfile: Dockerfile
         volumes:
-            - ./server:/server
-        working_dir: /server
+            - ./:/go/src
+        working_dir: /go/src
         command:  bash -c "go mod download && go run server.go"
         environment:
             - GRAPHQL_LOGFILEPATH=./log/app.log

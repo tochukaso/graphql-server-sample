@@ -1,0 +1,50 @@
+
+2021/07/03 09:17:04 /server/server.go:62
+[0.214ms] [rows:-] SELECT DATABASE()
+
+2021/07/03 09:17:04 /server/server.go:62
+[3.838ms] [rows:-] SELECT count(*) FROM information_schema.tables WHERE table_schema = 'graphql' AND table_name = 'products' AND table_type = 'BASE TABLE'
+
+2021/07/03 09:17:04 /go/pkg/mod/gorm.io/driver/mysql@v1.1.0/migrator.go:194
+[0.150ms] [rows:-] SELECT DATABASE()
+
+2021/07/03 09:17:04 /go/pkg/mod/gorm.io/driver/mysql@v1.1.0/migrator.go:203
+[1.873ms] [rows:-] SELECT column_name, is_nullable, data_type, character_maximum_length, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'graphql' AND table_name = 'products'
+
+2021/07/03 09:17:04 /server/server.go:62
+[0.183ms] [rows:-] SELECT DATABASE()
+
+2021/07/03 09:17:04 /server/server.go:62
+[1.723ms] [rows:-] SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'graphql' AND table_name = 'products' AND index_name = 'idx_products_name'
+
+2021/07/03 09:17:04 /server/server.go:62
+[0.121ms] [rows:-] SELECT DATABASE()
+
+2021/07/03 09:17:04 /server/server.go:62
+[0.857ms] [rows:-] SELECT count(*) FROM information_schema.tables WHERE table_schema = 'graphql' AND table_name = 'skus' AND table_type = 'BASE TABLE'
+
+2021/07/03 09:17:04 /go/pkg/mod/gorm.io/driver/mysql@v1.1.0/migrator.go:194
+[0.137ms] [rows:-] SELECT DATABASE()
+
+2021/07/03 09:17:04 /go/pkg/mod/gorm.io/driver/mysql@v1.1.0/migrator.go:203
+[0.872ms] [rows:-] SELECT column_name, is_nullable, data_type, character_maximum_length, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'graphql' AND table_name = 'skus'
+2021/07/03 09:17:04 connect to http://localhost:8085/ for GraphQL playground
+
+2021/07/19 06:56:15 /go/src/server.go:62
+[0.182ms] [rows:-] SELECT DATABASE()
+
+2021/07/19 06:56:15 /go/src/server.go:62
+[4.644ms] [rows:-] SELECT count(*) FROM information_schema.tables WHERE table_schema = 'graphql' AND table_name = 'products' AND table_type = 'BASE TABLE'
+
+2021/07/19 06:56:15 /go/src/server.go:62
+[19.469ms] [rows:0] CREATE TABLE `products` (`id` bigint AUTO_INCREMENT,`name` varchar(191) NOT NULL,`price` bigint NOT NULL,`code` longtext,`detail` longtext,`created_at` datetime(3) NULL,`updated_at` datetime(3) NULL,`deleted_at` datetime(3) NULL,PRIMARY KEY (`id`),INDEX idx_products_name (`name`))
+
+2021/07/19 06:56:15 /go/src/server.go:62
+[0.223ms] [rows:-] SELECT DATABASE()
+
+2021/07/19 06:56:15 /go/src/server.go:62
+[1.027ms] [rows:-] SELECT count(*) FROM information_schema.tables WHERE table_schema = 'graphql' AND table_name = 'skus' AND table_type = 'BASE TABLE'
+
+2021/07/19 06:56:15 /go/src/server.go:62
+[13.778ms] [rows:0] CREATE TABLE `skus` (`id` bigint AUTO_INCREMENT,`product_id` bigint NOT NULL,`name` longtext NOT NULL,`stock` bigint NOT NULL,`code` longtext,`created_at` datetime(3) NULL,`updated_at` datetime(3) NULL,`deleted_at` datetime(3) NULL,PRIMARY KEY (`id`))
+2021/07/19 06:56:15 connect to http://localhost:8085/ for GraphQL playground
