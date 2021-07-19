@@ -3,7 +3,7 @@ package graph
 import (
 	"sync"
 
-	"github.com/tochukaso/graphql-server/graph/model"
+	"github.com/tochukaso/graphql-server-sample/graph/model"
 )
 
 //go:generate go run github.com/99designs/gqlgen

@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/tochukaso/graphql-server/env"
+	"github.com/tochukaso/graphql-server-sample/env"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/tochukaso/graphql-server/graph/model"
+	"github.com/tochukaso/graphql-server-sample/graph/model"
 )
 
 // SkuSliceLoaderConfig captures the config to create a new SkuSliceLoader

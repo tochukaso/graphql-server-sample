@@ -11,11 +11,11 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/gorilla/websocket"
 	"github.com/rs/cors"
-	"github.com/tochukaso/graphql-server/db"
-	"github.com/tochukaso/graphql-server/env"
-	"github.com/tochukaso/graphql-server/graph"
-	"github.com/tochukaso/graphql-server/graph/generated"
-	"github.com/tochukaso/graphql-server/graph/model"
+	"github.com/tochukaso/graphql-server-sample/db"
+	"github.com/tochukaso/graphql-server-sample/env"
+	"github.com/tochukaso/graphql-server-sample/graph"
+	"github.com/tochukaso/graphql-server-sample/graph/generated"
+	"github.com/tochukaso/graphql-server-sample/graph/model"
 )
 
 const defaultPort = "8083"
